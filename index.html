@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+<title>Planning</title>
+<style>
+html,body{
+height:100%;
+margin:0;
+}
+body{
+font-family:Consolas;
+}
+table,td{
+border:1px solid grey;
+border-collapse:collapse;
+}
+table{
+background-color:#fff;
+margin-left:auto;
+margin-right:auto;
+border-width:2px;
+width:50%;
+}
+td{
+padding:8px;
+min-width:200px;
+}
+.date{
+width:200px;
+}
+#inf{
+background:#DB4437;
+color:#fff;
+}
+#hoc{
+background:#4285F4;
+color:#fff;
+}
+#sos{
+background:salmon;
+color:#fff;
+}
+#jeu{
+background:#F4B400;
+color:#fff;
+}
+#tab{
+background:#0F9D58;
+color:#fff;
+}
+#div0{
+position:fixed;
+top:8px;
+left:8px;
+}
+#div1{
+position:fixed;
+top:8px;
+right:8px;
+}
+</style>
+</head>
+<body>
+<table>
+<tbody id="tbody1"> 
+</tbody>
+</table>
+<div id="div0"><input type="number" value="3" id="nb"> <button id="val">Valider</button></div>
+<div id="div1"></div>
+<script>
+var dt=new Date();
+var d=dt.getDay();
+var m=dt.getMonth();
+var y=dt.getFullYear();
+var div1=document.getElementById('div1');
+var tbody1=document.getElementById('tbody1');
+var mois=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+var mardis=[];
+var mercredis=[];
+var jeudis=[];
+var samedis=[];
+var nb;
+div1.innerHTML=d+' '+m+' '+y;
+
+function gen_tab(){
+nb=document.getElementById("nb").value;
+tbody1.innerHTML='';
+tbody1.innerHTML+='<tr><td colspan="2">'+mois[m]+' '+y+'</td></tr>';
+tbody1.innerHTML+='<tr><td id="inf" colspan="2">🎨 Infographie - mardi de 14h à 15h</td></tr><tr><td class="date">📆 date</td><td>nom</td></tr>';
+tbody1.innerHTML+='<tr><td rowspan="'+nb+'" class="date">'+mardis+'</td><td contenteditable="true"></td></tr>';
+for (var i=0;i<(nb-1);i++){tbody1.innerHTML+='<tr><td contenteditable="true"></td></tr>'};
+}
+document.getElementById('val').addEventListener('click',gen_tab);
+
+</script>
+</body>
+</html>
