@@ -50,12 +50,10 @@ var jour=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
 var day=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 var plan=['0','Infographie']
 var tbody1=document.getElementById('tbody1');
-//get xm from input
 var xm=m;
-//get xy from input
 var xy=y;
+var ferie=[];
 var daysInMonth=function(month,year){return new Date(year,month,0).getDate();};
-//dim days in month
 var dim=daysInMonth(xm,xy);
 var dti;
 
@@ -64,7 +62,9 @@ function gen_days(j,nt){
 		if(i<10){di='0'+i}else{di=i};
 		dti=new Date(xy+','+(xm+1)+','+di);
 			if(String(dti).substr(0,3)==day[j]){
+			//while(String(i+' '+mois[xm]).indexOf(ferie)<0){
 			document.getElementById('td'+nt).innerHTML+=jour[j]+' '+i+' '+mois[xm]+'<br>';
+			}
 		}
 	}
 tbody1.innerHTML+='</td><td contenteditable></td></tr>';

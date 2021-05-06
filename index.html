@@ -2,96 +2,134 @@
 <html lang="fr">
 <head>
 <title>Planning</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <style>
-html,body{
-height:100%;
-margin:0;
-}
-body{
-font-family:Consolas;
-}
-table,td{
-border:1px solid grey;
-border-collapse:collapse;
-}
-table{
-background-color:#fff;
-margin-left:auto;
-margin-right:auto;
-border-width:2px;
-width:50%;
-}
-td{
-padding:8px;
-min-width:200px;
-}
-.date{
-width:200px;
-}
-#inf{
-background:#DB4437;
-color:#fff;
-}
-#hoc{
-background:#4285F4;
-color:#fff;
-}
-#sos{
-background:salmon;
-color:#fff;
-}
-#jeu{
-background:#F4B400;
-color:#fff;
-}
-#tab{
-background:#0F9D58;
-color:#fff;
-}
-#div0{
-position:fixed;
-top:8px;
-left:8px;
-}
-#div1{
-position:fixed;
-top:8px;
-right:8px;
+html,body{height:100%;margin:0;}
+body{font-family:Consolas;background:fixed linear-gradient(125deg,#DB4437,#4285F4,crimson,darkorange,#0F9D58);}
+table,td{border:1px solid #333;border-collapse:collapse;}
+table{background-color:#fff;margin-left:auto;margin-right:auto;border-width:2px;width:50%;}
+td{padding:8px;min-width:200px;}
+button{height:2em;}
+.date{width:200px;text-align:center;}
+#inf{background:#DB4437;color:#fff;}
+#hoc{background:#4285F4;color:#fff;}
+#sos{background:crimson;color:#fff;}
+#jeu{background:darkorange;color:#fff;}
+#tab{background:#0F9D58;color:#fff;}
+#div0{position:fixed;top:8px;left:8px;}
+#div1{position:fixed;top:8px;right:8px;text-align:right;}
+#imp{display:none;}
+@media print{
+	#div0,#div1{display:none;}
+	tr{page-break-inside:avoid;}
+	body{background:#fff;}
+	table{width:100%;}
 }
 </style>
 </head>
 <body>
-<table>
-<tbody id="tbody1"> 
-</tbody>
-</table>
-<div id="div0"><input type="number" value="3" id="nb"> <button id="val">Valider</button></div>
-<div id="div1"></div>
+<table><tbody id="tbody1"></tbody></table>
+<div id="div0">
+<input type="number" min="3" value="7" max="18" id="nb"> participants<br><br>
+<input type="month" id="im"><br><br>
+<button id="val">Valider</button> 
+<button id="imp">Imprimer</button>
+</div>
+<div id="div1">
+1 janvier<br>
+1 mai<br>
+8 mai<br>
+14 juillet<br>
+15 août<br>
+1 novembre<br>
+11 novembre<br>
+25 décembre<br>
+</div>
 <script>
 var dt=new Date();
-var d=dt.getDay();
 var m=dt.getMonth();
 var y=dt.getFullYear();
 var div1=document.getElementById('div1');
 var tbody1=document.getElementById('tbody1');
 var mois=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-var mardis=[];
-var mercredis=[];
-var jeudis=[];
-var samedis=[];
-var nb;
-div1.innerHTML=d+' '+m+' '+y;
+var jour=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+var day=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var imp=document.getElementById("imp");
+var nb=document.getElementById("nb");
+var nbv;
+var im=document.getElementById("im");
+var imv;
+var iyv;
+var arr=[];
+var tdc='<tr><td contenteditable="true"></td></tr>';
+var xm=m;
+var xy=y;
+var thismonth;
+var daysInMonth=function(month,year){return new Date(year,month,0).getDate();};
+var dim=daysInMonth(xm,xy);
+var dti;
+var dnr='<tr><td class="date">📆 dates</td><td>nom</td></tr>';
+var ferie=['1 mai','8 mai'];
+
+if((m+1)<10){thismonth="0"+(m+1);}else{thismonth=m+1;};
+im.value=y+'-'+(thismonth);
+imp.addEventListener("click",tablepri);
+
+function tablepri(){
+imp.removeEventListener("click",tablepri);
+imp.style.display="none";
+window.print();
+tbody1.innerHTML="";
+}
 
 function gen_tab(){
-nb=document.getElementById("nb").value;
-tbody1.innerHTML='';
-tbody1.innerHTML+='<tr><td colspan="2">'+mois[m]+' '+y+'</td></tr>';
-tbody1.innerHTML+='<tr><td id="inf" colspan="2">🎨 Infographie - mardi de 14h à 15h</td></tr><tr><td class="date">📆 date</td><td>nom</td></tr>';
-tbody1.innerHTML+='<tr><td rowspan="'+nb+'" class="date">'+mardis+'</td><td contenteditable="true"></td></tr>';
-for (var i=0;i<(nb-1);i++){tbody1.innerHTML+='<tr><td contenteditable="true"></td></tr>'};
-}
-document.getElementById('val').addEventListener('click',gen_tab);
+imp.style.display="inline";
+imp.addEventListener("click",tablepri);
+imv=im.value;
+xm=parseInt(imv.substr(imv.length-2))-1;
+xy=imv.substr(0,4);
 
+	nbv=nb.value;
+	tbody1.innerHTML='';
+	tbody1.innerHTML+='<tr><td colspan="2">Inscriptions Ateliers Multimedia - '+mois[xm]+' '+xy+'</td></tr>';
+	tbody1.innerHTML+='<tr><td id="inf" colspan="2">🎨 Infographie 🕑 de 14h à 15h</td></tr>'+dnr;
+	arr=[];gen_days(1);
+	tbody1.innerHTML+='<tr><td rowspan="'+nbv+'" class="date">'+arr.join('<br>')+'</td><td contenteditable="true"></td></tr>';
+	for (var i=0;i<(nbv-1);i++){tbody1.innerHTML+=tdc};
+
+	tbody1.innerHTML+='<tr><td id="hoc" colspan="2">💡 Heure de Code 🕑 de 14h à 15h</td></tr>'+dnr;
+	arr=[];gen_days(2);
+	tbody1.innerHTML+='<tr><td rowspan="'+nbv+'" class="date">'+arr.join('<br>')+'</td><td contenteditable="true"></td></tr>';
+	for (var i=0;i<(nbv-1);i++){tbody1.innerHTML+=tdc};
+
+	tbody1.innerHTML+='<tr><td id="sos" colspan="2">🚑 SOS Ordi 🕑 de 14h à 15h</td></tr>'+dnr;
+	arr=[];gen_days(3);
+	tbody1.innerHTML+='<tr><td rowspan="'+nbv+'" class="date">'+arr.join('<br>')+'</td><td contenteditable="true"></td></tr>';
+	for (var i=0;i<(nbv-1);i++){tbody1.innerHTML+=tdc};
+
+	tbody1.innerHTML+='<tr><td id="jeu" colspan="2">🎮 Jeux Vidéo 🕑 de 11h à 12h</td></tr>'+dnr;
+	arr=[];gen_days(5);
+	tbody1.innerHTML+='<tr><td rowspan="'+nbv+'" class="date">'+arr.join('<br>')+'</td><td contenteditable="true"></td></tr>';
+	for (var i=0;i<(nbv-1);i++){tbody1.innerHTML+=tdc};
+
+	tbody1.innerHTML+='<tr><td id="tab" colspan="2">📱 Tablettes & Smartphones 🕑 de 14h à 15h</td></tr>'+dnr;
+	arr=[];gen_days(5);
+	tbody1.innerHTML+='<tr><td rowspan="'+nbv+'" class="date">'+arr.join('<br>')+'</td><td contenteditable="true"></td></tr>';
+	for (var i=0;i<(nbv-1);i++){tbody1.innerHTML+=tdc};
+
+}
+
+function gen_days(j){
+	for(var i=1;i<=dim+1;i++){
+		if(i<10){di='0'+i}else{di=i};
+		dti=new Date(xy+','+(xm+1)+','+di);
+		//div1.innerHTML+=(i+' '+mois[xm])+'/'+ferie+' '+(i+' '+mois[xm]).indexOf(ferie)+'<br>';
+			if(String(dti).substr(0,3)==day[j]/*&&((i+' '+mois[xm]).indexOf(ferie)<0)*/){
+			arr.push(jour[j]+' '+di+' '+mois[xm]);}
+		}
+	}
+
+document.getElementById('val').addEventListener('click',gen_tab);
 </script>
 </body>
 </html>
