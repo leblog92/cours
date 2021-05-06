@@ -1,11 +1,13 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="fr">
 <head>
-<title>Planning</title>
+<title>Assistant Planning</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <style>
 html,body{height:100%;margin:0;}
-body{font-family:Consolas;background:fixed linear-gradient(125deg,#DB4437,#4285F4,crimson,darkorange,#0F9D58);}
+body{font-family:Consolas;font-size:1em;}
+/*body{background:fixed linear-gradient(125deg,#DB4437,#4285F4,crimson,darkorange,#0F9D58);}*/
+body{background:fixed linear-gradient(125deg,crimson,darkorange);}
 table,td{border:1px solid #333;border-collapse:collapse;}
 table{background-color:#fff;margin-left:auto;margin-right:auto;border-width:2px;width:50%;}
 td{padding:8px;min-width:200px;}
@@ -69,7 +71,7 @@ var daysInMonth=function(month,year){return new Date(year,month,0).getDate();};
 var dim=daysInMonth(xm,xy);
 var dti;
 var dnr='<tr><td class="date">📆 dates</td><td>nom</td></tr>';
-var ferie=['1 mai','8 mai'];
+var ferie=['1 janvier','1 mai','8 mai','14 juillet','15 août','1 novembre','11 novembre','25 décembre'];
 
 if((m+1)<10){thismonth="0"+(m+1);}else{thismonth=m+1;};
 im.value=y+'-'+(thismonth);
@@ -123,8 +125,7 @@ function gen_days(j){
 	for(var i=1;i<=dim+1;i++){
 		if(i<10){di='0'+i}else{di=i};
 		dti=new Date(xy+','+(xm+1)+','+di);
-		//div1.innerHTML+=(i+' '+mois[xm])+'/'+ferie+' '+(i+' '+mois[xm]).indexOf(ferie)+'<br>';
-			if(String(dti).substr(0,3)==day[j]/*&&((i+' '+mois[xm]).indexOf(ferie)<0)*/){
+			if(String(dti).substr(0,3)==day[j]&&ferie.includes((i+' '+mois[xm]))==false){
 			arr.push(jour[j]+' '+di+' '+mois[xm]);}
 		}
 	}
